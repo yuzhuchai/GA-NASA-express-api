@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const nasaDataSchema = new mongoose.Schema({
 	cat: String,
 	content: String,
-	api: String,
+	api: Array,
 	imgUrl: {
 		type: String,
 		default: null

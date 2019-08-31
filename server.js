@@ -24,6 +24,19 @@ const corsOptions = {
 	optionSuccessStatus: 200
 }
 
+app.use(cors(corsOptions));
+
+app.post("/demo-postman",(req,res,next)=>{
+	res.status(200).json({
+		status: 200,
+		message:"request received",
+		dataRecieved: req.body
+	})
+})
+
+
+const nasadataController = require('./controllers/nasaController')
+app.use('/api/v1/nasadata', nasadataController)
 
 app.listen(process.env.PORT, () => {
 	console.log('listening on port '+process.env.PORT);

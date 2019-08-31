@@ -16,7 +16,8 @@ const postSchema = new mongoose.Schema({
 	favoritedBy: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
-	}
+	},
+	post: String,
 })
 
 const Post = mongoose.model('Post',postSchema)

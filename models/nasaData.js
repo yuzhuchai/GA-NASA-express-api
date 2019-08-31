@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const nasaDataSchema = new mongoose.Schema({
 	cat: String,
-	content: String,
+	myData: String,
 	api: Array,
 	imgUrl: {
 		type: String,
@@ -12,6 +12,7 @@ const nasaDataSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+	defaultInfo: Boolean 
 })
 
 const NasaData = mongoose.model('NasaData',nasaDataSchema)

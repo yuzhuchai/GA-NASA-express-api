@@ -71,7 +71,7 @@ try{
 })
 
 
-
+// you can pick date of the earth img, numbers of imgs, date of the near earth objs, number of objs.
 
 // for Earth and Near Earth OBjs. 
 router.get('/earth', async (req,res)=>{
@@ -132,11 +132,73 @@ router.get('/earth', async (req,res)=>{
 			message: 'internal server error',
 			error: err
 		})
-	}
-
-
+	} //end of catch 
 })
 
+
+
+// call for the SPACE WEATHER DATABASE: 
+router.get('/weather', async (req,res)=>{
+	try{
+		// 	this is the call for A coronal mass ejection (CME) is a significant release of plasma and accompanying magnetic field from the solar corona. 
+		//this is not returning any data back 
+// 		const cmeurl = `https://api.nasa.gov/DONKI/CME?api_key=${process.env.API_KEY}`
+// 		// default date is the newest date with data. 
+// 		const cmeResponse = await superagent.get(cmeurl)
+// 		const parsedCMEResponse = await JSON.parse(cmeResponse.text)
+// 		const latestdata = parsedCMEResponse[parsedCMEResponse.length-1]
+// 		const cmeAnalysis = latestdata.cmeAnalyses.filter(data => data.note)
+
+
+// 		// interplanetary shock 
+// 		const ipsUrl = `https://api.nasa.gov/DONKI/IPS?startDate=2016-01-01&endDate=2016-01-30&api_key=${process.env.API_KEY}`
+// 		const ipsResponse = await superagent.get(ipsUrl)
+// 		const parsedIPSResponse = await JSON.parse(ipsResponse.text)
+
+
+
+// those are notifications: maybe useful for some other purposes?????? 
+		const notificationURL= `https://api.nasa.gov/DONKI/notifications?type=all&api_key=${process.env.API_KEY}`
+		const notificationResponse = await superagent.get(notificationURL)
+		const parsedNotification = await JSON.parse(notificationResponse.text)
+		const num = await Math.floor(Math.random()*parsedNotification.length-2)
+		const data = await parsedNotification[num]
+// 		const myData = {
+// 			CME: {
+// 				instruments: latestdata.instruments[0].displayName,
+// 				time: cmeAnalysis[0].time21_5,
+// 				latitude: cmeAnalysis[0].latitude,
+// 				longitude: cmeAnalysis[0].longitude,
+// 				speed: cmeAnalysis[0].speed,
+// 				type: cmeAnalysis[0].type,
+// 				nodes: cmeAnalysis[0].note
+// 			},
+// 			IPS: {
+
+// 			}
+// 		}
+		const createdPost = await NasaData.create({
+			api: [notificationURL], 
+			cat: 'WEATHER', 
+			defaultInfo: true,
+			myData: JSON.stringify(data)
+		})
+
+		res.status(200).json({
+			success: true,
+			message:'success',
+			data: createdPost
+		})
+
+	}catch(err){
+		res.status(500).json({
+			success: false,
+			message: 'internal server error',
+			error: err
+		})
+	}
+
+})
 
 
 

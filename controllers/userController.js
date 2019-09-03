@@ -22,7 +22,7 @@ router.post('/register', async (req,res)=>{
 			req.session.userId = createUser._id
 			req.session.username = createUser.username
 			req.session.loggedIn = true;
-
+			console.log(req.session,"<--------req.session in the register route");
 			res.status(200).json({
 				success: true,
 				message: `${createUser.username} registed success!`
@@ -57,6 +57,7 @@ router.post('/login', async (req,res)=>{
 				req.session.userId = foundUser._id
 				req.session.username = foundUser.username
 				req.session.loggedIn = true
+				console.log(req.session,"<--------req.session in the login route");
 
 				res.status(200).json({
 					success: true,
@@ -90,13 +91,44 @@ router.post('/login', async (req,res)=>{
 
 
 // delete user
-router.delete('/:id', (req,res)=>{
+router.delete('/:id', async (req,res)=>{
+	try{
+		const deleteUser = await User.findByIdAndRemove(req.params.id)
+
+		res.status(200).json({
+			success: true,
+			message: `${deleteUser.username} successfully deleted`
+		})
+	 	
+	 }catch(err){
+	 	res.status(500).json({
+	 		success: false,
+	 		message: 'internal server error',
+	 		error: err
+	 	})
+	 } 
 	
 })
 
 
 // update profile 
-router.put('/:id',(req,res)=>{
+router.put('/:id', async (req,res)=>{
+
+	try{
+		const editUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+
+		res.status(200).json({
+			success: true,
+			code: 200,
+			data: editUser
+		})
+	}catch(err){
+		res.status(500).json({
+			success: false,
+			message: 'internal server error',
+			error: err
+		})
+	}
 	
 })
 

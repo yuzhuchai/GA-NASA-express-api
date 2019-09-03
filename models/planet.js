@@ -8,7 +8,11 @@ const planetSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref:'User'
 	},
-	data:String
+	data:String,
+	status: {
+		type: Number,
+		default: 100
+	}
 })
 
 const Planet = mongoose.model('Planet',planetSchema)

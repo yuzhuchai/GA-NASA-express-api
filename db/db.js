@@ -11,7 +11,7 @@ if(process.env.NODE_ENV === "production"){
 mongoose.connect(connectionString,{
 	useNewUrlParser: true,
 	useCreateIndex: true,
-	useFindAndModidy: false 
+	useFindAndModify: false 
 })
 
 mongoose.connection.on('connected',() => {

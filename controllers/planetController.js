@@ -115,12 +115,12 @@ router.post('/custom', async (req,res)=>{
 
 // get the planet and store the user. 
 // use put. because we have the id. ?????
-router.put('/save/:id', async (req,res)=>{
+router.get('/save/:id', async (req,res)=>{
 	// get the id of current user from the front end and update the user. or use session?????
 
-	// req.session after the user controller
+	console.log(req.session)
 	try {
-    const updateUserToPlanet = await Planet.findByIdAndUpdate(req.params.id, { user: req.body.user }, {new: true});
+    const updateUserToPlanet = await Planet.findByIdAndUpdate(req.params.id, { user: req.session.userId }, {new: true});
     res.status(200).json({
         success: true, 
         code: 200,

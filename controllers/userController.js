@@ -89,6 +89,24 @@ router.post('/login', async (req,res)=>{
 
 })
 
+router.get('/logout', (req,res)=>{
+	req.session.destroy((err) => {
+		if(err){
+			res.status(500).json({
+				success: false,
+				message:'internal server error',
+				error: err
+			})
+			console.log(req.session,"<------req.session in logout");
+		} else {
+			res.status(200).json({
+				success: true,
+				message: 'user logged out'
+			})
+		}
+	})
+})
+
 
 // delete user
 router.delete('/:id', async (req,res)=>{

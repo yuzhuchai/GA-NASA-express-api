@@ -37,6 +37,8 @@ app.post("/demo-postman",(req,res,next)=>{
 
 const nasadataController = require('./controllers/nasaController')
 app.use('/api/v1/nasadata', nasadataController)
+const planetController = require('./controllers/planetController')
+app.use('/api/v1/planet', planetController)
 
 app.listen(process.env.PORT, () => {
 	console.log('listening on port '+process.env.PORT);

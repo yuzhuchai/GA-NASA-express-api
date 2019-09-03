@@ -44,9 +44,48 @@ router.post('/register', async (req,res)=>{
 })
 
 
-router.post('/login', (req,res)=>{
-	
+
+
+
+router.post('/login', async (req,res)=>{
 // req.session!!!!!!!!
+	try{
+		// found the user with the user name: 
+		const foundUser = await User.findOne({username: req.body.username})
+		if(foundUser){
+			if(bcrypt.compareSync(req.body.password, foundUser.password)){
+				req.session.userId = foundUser._id
+				req.session.username = foundUser.username
+				req.session.loggedIn = true
+
+				res.status(200).json({
+					success: true,
+					message: `${foundUser.username} logged in`,
+					code: 200
+				})
+			}else {
+				res.status(200).json({
+					success: false,
+					code: 200,
+					message:'username or password invalid',
+				})
+			} //end of else if user not found and passowrd not correct 
+		} else {
+			res.status(200).json({
+				success: false,
+				code: 200,
+				message: 'username or password invalid',
+			})
+		}//end of else if usernot found
+
+	}catch(err){
+		res.status(500).json({
+			success: false,
+			message: 'internal server error',
+			error: err
+		})
+	}
+
 })
 
 

@@ -32,7 +32,7 @@ router.post('/register', async (req,res)=>{
 		} else {
 			res.status(200).json({
 				success: false,
-				messgae: 'username already exists'
+				message: 'username already exists'
 			})
 		}
 	}catch(err){
@@ -63,7 +63,8 @@ router.post('/login', async (req,res)=>{
 				res.status(200).json({
 					success: true,
 					message: `${foundUser.username} logged in`,
-					code: 200
+					code: 200,
+					data: foundUser
 				})
 			}else {
 				res.status(200).json({

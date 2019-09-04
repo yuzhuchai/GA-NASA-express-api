@@ -68,7 +68,56 @@ router.get('/default', async (req,res)=>{
 })
 
 
+router.get('/find', async (req,res)=>{
+	try{
 
+		// this is getting all the planet in the kepler field
+		const planetUrl = `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,st_age,pl_pelink,pl_mnum,pl_facility,st_teff,pl_orbper,pl_disc,pl_locale,pl_discmethod,pl_name,pl_masse&format=json&where=pl_name like '${req.body.name}'`
+		const defaultPlanet = await superagent.get(planetUrl)
+
+		const parsedDefaultPlanet = JSON.parse(defaultPlanet.text)
+		console.log(parsedDefaultPlanet);
+		// Rows are listed in ascending order by default, based on the values within the row
+
+				const planet = parsedDefaultPlanet[0] 
+				const planetToCreate = {
+					// apiUrl: [planetUrl,num],
+					bio: `this baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
+					name: planet.pl_name,
+					// user: null,
+					// data: JSON.stringify({
+					// 	hostName: planet.pl_hostname,
+					// 	name: planet.pl_name,
+					// 	discoveryMethod: planet.pl_discmethod,
+					// 	EarthMass: planet.pl_masse,
+					// 	orbitalPeriodAroundHostStarDay: planet.pl_orbper,
+					// 	discoveryfacility: planet.pl_facility,
+					// 	yearDiscovered: planet.pl_disc,
+					// 	locationDiscovered: planet.pl_locale,
+					// 	numberOFmoonsInSystem: planet.pl_mnum,
+					// 	ageOfHostStar: planet.st_age,
+					// 	linkToEncyclopaedia: planet.pl_pelink,
+					// 	effectiveTemp: planet.st_teff,
+					// })					
+				}//end of planet to create
+
+		// const createdPlanets = await Planet.create(planetArr)
+
+		res.status(200).json({
+			success: true,
+			code: 200,
+			message: 'success',
+			data: planetToCreate
+		})
+
+	} catch(err) {
+		res.status(500).json({
+	        success: false,
+	        message: "internal server error",
+	        error: err
+    	})
+	}
+})
 
 
 

@@ -27,7 +27,7 @@ router.get('/default', async (req,res)=>{
 				const planet = parsedDefaultPlanet[num] 
 				const planetToCreate = {
 					// apiUrl: [planetUrl,num],
-					bio: `your baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
+					bio: `this baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
 					name: planet.pl_name,
 					// user: null,
 					// data: JSON.stringify({
@@ -74,9 +74,9 @@ router.get('/default', async (req,res)=>{
 
 
 // create planet with req.body --- add this planet as this user's pet
-router.post('/custom', async (req,res) => {
+router.post('/adopt', async (req,res) => {
 	try{
-		planetUrl = `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,st_age,pl_pelink,pl_mnum,pl_facility,st_teff,pl_orbper,pl_disc,pl_locale,pl_discmethod,pl_name,pl_masse&format=json&where=pl_name like 'Kepler-${req.body.number} ${req.body.abc}'`
+		planetUrl = `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,st_age,pl_pelink,pl_mnum,pl_facility,st_teff,pl_orbper,pl_disc,pl_locale,pl_discmethod,pl_name,pl_masse&format=json&where=pl_name like '${req.body.name}'`
 		const customPlanet = await superagent.get(planetUrl) 
 		const parsedResponse = JSON.parse(customPlanet.text)
 		const planet = parsedResponse[0]
@@ -97,13 +97,12 @@ router.post('/custom', async (req,res) => {
 
 		// const bio = `your baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`
 
-
 		const createdPlanet = await Planet.create({
 			apiUrl: [planetUrl],
 			bio: req.body.bio,
 			name: planet.pl_name,
 			user: req.session.userId,
-			data: myData
+			data: JSON.stringify(myData)
 		})
 
 		res.status(200).json({

@@ -42,6 +42,8 @@ const planetController = require('./controllers/planetController')
 app.use('/api/v1/planet', planetController)
 const postController = require('./controllers/postController')
 app.use('/api/v1/post', postController)
+const commentController = require('./controllers/commentController')
+app.use('/api/v1/comment', commentController)
 
 
 

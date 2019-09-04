@@ -13,10 +13,10 @@ const postSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'NasaData'
 	},
-	favoritedBy: {
+	favoritedBy: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
-	},
+	}],
 	content: String,
 	img: {
 		type: String,

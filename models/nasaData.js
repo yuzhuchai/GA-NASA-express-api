@@ -15,5 +15,5 @@ const nasaDataSchema = new mongoose.Schema({
 	defaultInfo: Boolean
 })
 
-const NasaData = mongoose.model('NasaData',nasaDataSchema)
+const NasaData = mongoose.model('NasaData', nasaDataSchema)
 module.exports = NasaData

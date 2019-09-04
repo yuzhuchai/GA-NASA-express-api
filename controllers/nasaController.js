@@ -200,6 +200,26 @@ router.get('/weather', async (req,res)=>{
 
 })
 
+// this route is used for testing 
+router.get('/', async (req,res)=>{
+	try{
+		const findAllPost = await NasaData.find()
+		res.status(200).json({
+			success: true,
+			message: 'success',
+			code: 200,
+			data: findAllPost
+		})
+		
+	}catch(err){
+		res.status(500).json({
+			message:'internal server error',
+			error: err,
+			success: false 
+		})
+	}
+})
+
 
 
 module.exports = router;

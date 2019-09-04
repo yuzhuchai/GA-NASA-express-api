@@ -12,7 +12,7 @@ const nasaDataSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
-	defaultInfo: Boolean 
+	defaultInfo: Boolean
 })
 
 const NasaData = mongoose.model('NasaData',nasaDataSchema)

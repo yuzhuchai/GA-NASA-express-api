@@ -137,10 +137,10 @@ router.get('/save/:id', async (req,res)=>{
 })
 
 
-// getting all the planets 
+// getting all the planets that have the user (that are saved)
 router.get('/', async (req,res)=>{
 	try{
-		const findAllPlanet = await Planet.find()
+		const findAllPlanet = await Planet.find({ user: { $ne: null } })
 		res.status(200).json({
 	        success:true,
 	        code: 200,
@@ -159,7 +159,20 @@ router.get('/', async (req,res)=>{
 })
 
 
-// getting individual planet 
+
+// find one planet???????? do i need it? 
+// router.get('/:id', async (req,res)=>{
+// 	try{
+// 		const findUserPlanet = await Planet.find
+		
+// 	}catch(err){
+// 		res.status(500).json({
+// 			success: false,
+// 			message: 'internal server error',
+// 			error: err
+// 		})
+// 	}
+// })
 
 
 

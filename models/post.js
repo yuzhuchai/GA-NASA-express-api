@@ -1,4 +1,4 @@
-const mongoose = requrie('mongoose')
+const mongoose = require('mongoose')
 
 const postSchema = new mongoose.Schema({
 	user: {
@@ -9,7 +9,7 @@ const postSchema = new mongoose.Schema({
 	    type: Date,
 	    default: Date.now,
 	},
-	content: {
+	data: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'NasaData'
 	},
@@ -17,7 +17,11 @@ const postSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	},
-	post: String,
+	content: String,
+	img: {
+		type: String,
+		default: null
+	}
 })
 
 const Post = mongoose.model('Post',postSchema)

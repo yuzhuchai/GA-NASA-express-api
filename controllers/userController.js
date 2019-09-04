@@ -25,7 +25,8 @@ router.post('/register', async (req,res)=>{
 			console.log(req.session,"<--------req.session in the register route");
 			res.status(200).json({
 				success: true,
-				message: `${createUser.username} registed success!`
+				message: `${createUser.username} registed success!`,
+				data: createUser
 			})
 			
 		} else {

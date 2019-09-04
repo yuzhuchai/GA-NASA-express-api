@@ -231,7 +231,8 @@ router.get('/apod', async (req,res)=>{
 		const data = {
 			imgCaption: parsedRespond.title,
 			explnation: parsedRespond.explanation,
-			mediaType: parsedRespond.media_type
+			mediaType: parsedRespond.media_type,
+			date: parsedRespond.date
 		}
 
 

@@ -91,7 +91,42 @@ router.get('/:id', async (req,res)=>{
 }) 
 
 // delete post 
+router.delete('/:id', async (req,res)=>{
+	try{
+		const deletePost = await Post.findByIdAndRemove(req.params.id)
+		res.status(200).json({
+			message: `${deletePost._id} successfully deleted`,
+			success: true,
+		})
+
+	}catch(err){
+		res.status(500).json({
+			message: 'internal server error',
+			error: err,
+			success: false 
+		})
+	}
+})
+
 // edit post 
+router.put('/:id', async (req,res)=>{
+	try{
+
+		const editPost = await Post.findByIdAndUpdate(req.params.id, {'content': req.body.content}, {new: true})
+		res.status(200).json({
+			message: 'success',
+			code: 200,
+			data: editPost 
+		})
+		
+	}catch(err){
+		res.status(500).json({
+			message: 'internal server error',
+			error: err,
+			success: false 
+		})
+	}
+})
 
 
 

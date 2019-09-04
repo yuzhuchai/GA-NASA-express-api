@@ -198,6 +198,25 @@ router.delete('/:id', async (req,res)=>{
 })
 
 
+router.put('status/:id', async (req,res)=>{
+	try{
+		const updatePlanetStatus = await Planet.findByIdAndUpdate(req.params.id, {status: req.body.status}, {new: true})
+		
+		res.status(200).json({
+			success: true,
+			code: 200,
+			message: 'resource updated successfully',
+			data: updatedPlanetStatus 
+		})
+		
+	}catch(err){
+		res.status(500).json({
+			success: false,
+			message: 'internal server error',
+			error: err
+		})
+	}
+})
 
 
 

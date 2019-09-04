@@ -201,25 +201,64 @@ router.get('/weather', async (req,res)=>{
 })
 
 // this route is used for testing 
-router.get('/', async (req,res)=>{
+// router.get('/', async (req,res)=>{
+// 	try{
+// 		const findAllPost = await NasaData.find()
+// 		res.status(200).json({
+// 			success: true,
+// 			message: 'success',
+// 			code: 200,
+// 			data: findAllPost
+// 		})
+		
+// 	}catch(err){
+// 		res.status(500).json({
+// 			message:'internal server error',
+// 			error: err,
+// 			success: false 
+// 		})
+// 	}
+// })
+
+
+// APOD 
+router.get('/apod', async (req,res)=>{
 	try{
-		const findAllPost = await NasaData.find()
+		const url = `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
+		const apodRespond = await superagent.get(url)
+		const parsedRespond = await JSON.parse(apodRespond.text)
+
+		const data = {
+			imgCaption: parsedRespond.title,
+			explnation: parsedRespond.explanation,
+			mediaType: parsedRespond.media_type
+		}
+
+
+		const createdPost = await NasaData.create({
+			api: [url], 
+			imgUrl: parsedRespond.url,
+			cat: 'APOD', 
+			defaultInfo: true,
+			myData: JSON.stringify(data)
+		})
+
 		res.status(200).json({
 			success: true,
 			message: 'success',
 			code: 200,
-			data: findAllPost
+			data: createdPost
 		})
 		
 	}catch(err){
 		res.status(500).json({
-			message:'internal server error',
+			message: 'internal server error',
 			error: err,
 			success: false 
 		})
+		
 	}
 })
-
 
 
 module.exports = router;

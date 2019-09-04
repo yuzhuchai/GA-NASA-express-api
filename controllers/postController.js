@@ -4,11 +4,6 @@ const Post = require('../models/post')
 const NasaData = require('../models/nasaData')
 
 // save the post to the user. 
-// delete post 
-// edit post 
-// get all the post
-// get a single post 
-
 
 router.get('/save/:id', async (req,res)=>{
 	// the id will be the id of the nasaData, not the actual post
@@ -53,9 +48,38 @@ router.get('/save/:id', async (req,res)=>{
 			success: false 
 		})
 	}
-
-	
 })
+
+
+// get all the post
+router.get('/', async (req,res)=>{
+	try{
+		
+		const findAllPost = await Post.find()
+		res.status(200).json({
+			message:'success',
+			success: true,
+			data: findAllPost
+		})
+
+	}catch(err){
+		res.status(500).json({
+			message:'internal server error',
+			error: err,
+			success: false 
+		})
+	}
+})
+
+
+
+// delete post 
+// edit post 
+
+// get a single post 
+
+
+
 
 
 

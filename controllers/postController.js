@@ -72,11 +72,27 @@ router.get('/', async (req,res)=>{
 })
 
 
+// get a single post
+router.get('/:id', async (req,res)=>{
+	try{
+		const findPost = await Post.findById(req.params.id)
+		res.status(200).json({
+			message:'success',
+			success: true,
+			data: findPost
+		})
+	}catch(err){
+		res.status(500).json({
+			message: 'internal server error',
+			error: err,
+			success: false 
+		})
+	}
+}) 
 
 // delete post 
 // edit post 
 
-// get a single post 
 
 
 

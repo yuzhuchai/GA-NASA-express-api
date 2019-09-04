@@ -4,6 +4,7 @@ const Post = require('../models/post')
 const NasaData = require('../models/nasaData')
 const Planet = require('../models/planet')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 // save the post to the user. 
 // of the apis 
 router.get('/save/:id', async (req,res)=>{
@@ -64,7 +65,7 @@ router.post('/planet', async (req,res)=>{
 		const createdPost = await Post.create({
 			user: req.session.userId,
 			data: req.params.id,
-			content: req.params.content,
+			content: req.body.content,
 		})
 		res.status(200).json({
 			success: true,
@@ -123,10 +124,11 @@ router.get('/:id', async (req,res)=>{
 	}
 }) 
 
-// delete post 
+// delete post >>>>>> should also delete comment? 
 router.delete('/:id', async (req,res)=>{
 	try{
 		const deletePost = await Post.findByIdAndRemove(req.params.id)
+		const deleteComment = await Comment.deleteMany({'post': req.params.id})
 		res.status(200).json({
 			message: `${deletePost._id} successfully deleted`,
 			success: true,
@@ -141,7 +143,9 @@ router.delete('/:id', async (req,res)=>{
 	}
 })
 
-// button to favorite the post: 
+
+
+// button to favorite/save the post: 
 router.put('/like/:id', async (req,res)=>{
 	try{
 		const editPost = await Post.findByIdAndUpdate(req.params.id,  
@@ -157,8 +161,6 @@ router.put('/like/:id', async (req,res)=>{
 			code: 200,
 			data: editPost, editUser
 		})
-
-
 
 	}catch(err){
 		res.status(500).json({

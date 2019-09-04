@@ -108,5 +108,24 @@ router.put('/:id', async (req,res)=>{
 	}
 })
 
+
+// delete comment: 
+router.delete('/:id', async (req,res)=>{
+	try{
+		const deleteComment = await Comment.findByIdAndRemove(req.params.id)
+		res.status(200).json({
+			message: `${deleteComment.id} deleted successfully`,
+			code: 200
+		})
+		
+	}catch(err){
+		res.status(500).json({
+			message: 'internal server error',
+			success: false,
+			error: err
+		})
+	}
+})
+
 module.exports = router 
 

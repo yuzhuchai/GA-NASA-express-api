@@ -7,15 +7,6 @@ const superagent = require('superagent')
 
 //for MARS: 
 
-// 	//the req.body will be date, rover
-// 	// req.body.rover : curiosity(default), req.body.date (today's date-7)
-
-// Mars Weather:  This API provides per-Sol summary data for each of the last seven available Sols (Martian Days). 
-// users maybe able to pic which of the seven day that they would like to checkout. 
-
-// what about sol  get the data back of all the sol keys and the corrospanding earth dates and pick one you wanna see? STRETCH GOAL
-
-
 // this is the default and sample for mars cat post data: 
 router.get('/mars', async (req,res,next)=>{
 try{
@@ -42,25 +33,6 @@ try{
 	const solDate = parsedWeatherResponse.sol_keys[randomnum] //this get you the latest date
 	const singleSetData = parsedWeatherResponse[solDate] //this get you the data of the latest date 
 
-	// const [response, weatherResponse] = Promise.all[superagent.get(imgUrlapi), superagent.get(weatherUrlapi)]
-	// const latestdata = {
-	// 	'sol_keys': parsedWeatherResponse.sol_keys,
-	// 	'sol': solDate,
-	// 	'atmosphericTemp': singleSetData['AT']['av'],
-	// 	'firstDate': singleSetData['First_UTC'],
-	// 	'lastDate': singleSetData['Last_UTC'],
-	// 	'seasion': singleSetData['Season'],
-	// 	'horizontalWindSpeed': singleSetData['HWS']['av'],
-	// 	'windDirection': singleSetData['WD']['most_common']['compass_point']
-	// }
-
-	// const createdPost = await NasaData.create({
-	// 	api: [imgUrlapi, weatherUrlapi], 
-	// 	imgUrl: photourl, 
-	// 	cat: 'MARS', 
-	// 	myData: JSON.stringify(latestdata), 
-	// 	defaultInfo: true
-	// })
 	const postToCreate = {
 		cat: 'mars',
 		imgUrl:photo.img_src,
@@ -153,7 +125,7 @@ router.get('/spaceweather', async (req,res)=>{
 		const data = await parsedNotification[num]
 
 		const postToCreate = {
-			imgUrl: null,
+			imgUrl: '',
 			content: `this is the NASA space weather notification on ${data.messageIssueTime}, this notificaion is about ${data.messageType}: here is the message: ${data.messageBody}`,
 			cat: 'spaceweather'
 		}

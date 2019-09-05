@@ -138,7 +138,7 @@ router.get('/earth', async (req,res)=>{
 
 
 // call for the SPACE WEATHER DATABASE: 
-router.get('/weather', async (req,res)=>{
+router.get('/spaceweather', async (req,res)=>{
 	try{
 		// 	this is the call for A coronal mass ejection (CME) is a significant release of plasma and accompanying magnetic field from the solar corona. 
 		//this is not returning any data back 
@@ -294,7 +294,7 @@ router.post('/planet', async (req,res)=>{
 
 
 // APOD 
-router.get('/apod', async (req,res)=>{
+router.get('/load/apod', async (req,res,next)=>{
 	try{
 		const url = `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
 		const apodRespond = await superagent.get(url)
@@ -307,7 +307,7 @@ router.get('/apod', async (req,res)=>{
 			mediaType: parsedRespond.media_type,
 			date: parsedRespond.date
 		}
-
+		
 		res.status(200).json({
 			success: true,
 			message: 'success',
@@ -316,14 +316,45 @@ router.get('/apod', async (req,res)=>{
 		})
 		
 	}catch(err){
-		res.status(500).json({
-			message: 'internal server error',
-			error: err,
-			success: false 
-		})
+		next(err)
 		
 	}
 })
+
+
+router.get('/apod', async (req,res,next)=>{
+	try{
+		const randomDate = (start, end) => {
+    		return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+		}
+		const date = randomDate(new Date(2016, 1, 1), new Date())
+		const qString = date.toISOString().split('T')[0]
+		console.log(qString,'<----randomDate');
+
+		const url = `https://api.nasa.gov/planetary/apod?date=${qString}&api_key=${process.env.API_KEY}`
+		const apodRespond = await superagent.get(url)
+		const parsedRespond = await JSON.parse(apodRespond.text)
+
+		const postToCreate = {
+			imgUrl: parsedRespond.url,
+			content: `this photo is titled ${parsedRespond.title}, it is taken on ${parsedRespond.date} copyrighted by ${parsedRespond.copyright}. and here is a paragraph describing this photo: ${parsedRespond.explanation}`
+		}
+
+		res.status(200).json({
+			success: true,
+			message: 'success',
+			code: 200,
+			data: postToCreate
+		})
+		
+	}catch(err){
+		next(err)
+		
+	}
+})
+
+
+
 
 
 module.exports = router;

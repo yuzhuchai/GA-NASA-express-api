@@ -17,56 +17,67 @@ const superagent = require('superagent')
 
 
 // this is the default and sample for mars cat post data: 
-router.get('/mars', async (req,res)=>{
+router.get('/mars', async (req,res,next)=>{
 try{
 	const num = Math.floor(Math.random()*10)
+	const randomDate = (start, end) => {
+    		return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+		}
+	const date = randomDate(new Date(2016, 1, 1), new Date())
+	const qString = date.toISOString().split('T')[0]
+	console.log(qString,'<----randomDate');
 
-	const imgUrlapi = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=2019-8-20&api_key=${process.env.API_KEY}`
+	const imgUrlapi = `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=${qString}&api_key=${process.env.API_KEY}`
 	const response = await superagent.get(imgUrlapi)
 	const parsedResponse = await JSON.parse(response.text)	
-	const photourl = parsedResponse.photos[num].img_src  //this is the photo url for the post 
+	const photo = parsedResponse.photos[num]  //this is the photo url for the post 
 
 
 	const weatherUrlapi = `https://api.nasa.gov/insight_weather/?&api_key=${process.env.API_KEY}&feedtype=json&ver=1.0`
 	const weatherResponse = await superagent.get(weatherUrlapi)
 	const parsedWeatherResponse = await JSON.parse(weatherResponse.text) 
-	const solDate = await parsedWeatherResponse.sol_keys[6] //this get you the latest date
+	const randomnum = Math.floor(Math.random()*(parsedWeatherResponse.sol_keys.length))
+	// console.log(parsedWeatherResponse.sol_keys, randomnum);
+	 
+	const solDate = parsedWeatherResponse.sol_keys[randomnum] //this get you the latest date
 	const singleSetData = parsedWeatherResponse[solDate] //this get you the data of the latest date 
 
 	// const [response, weatherResponse] = Promise.all[superagent.get(imgUrlapi), superagent.get(weatherUrlapi)]
-	const latestdata = {
-		'sol_keys': parsedWeatherResponse.sol_keys,
-		'sol': solDate,
-		'atmosphericTemp': singleSetData['AT']['av'],
-		'firstDate': singleSetData['First_UTC'],
-		'lastDate': singleSetData['Last_UTC'],
-		'seasion': singleSetData['Season'],
-		'horizontalWindSpeed': singleSetData['HWS']['av'],
-		'windDirection': singleSetData['WD']['most_common']['compass_point']
-	}
+	// const latestdata = {
+	// 	'sol_keys': parsedWeatherResponse.sol_keys,
+	// 	'sol': solDate,
+	// 	'atmosphericTemp': singleSetData['AT']['av'],
+	// 	'firstDate': singleSetData['First_UTC'],
+	// 	'lastDate': singleSetData['Last_UTC'],
+	// 	'seasion': singleSetData['Season'],
+	// 	'horizontalWindSpeed': singleSetData['HWS']['av'],
+	// 	'windDirection': singleSetData['WD']['most_common']['compass_point']
+	// }
 
-	const createdPost = await NasaData.create({
-		api: [imgUrlapi, weatherUrlapi], 
-		imgUrl: photourl, 
-		cat: 'MARS', 
-		myData: JSON.stringify(latestdata), 
-		defaultInfo: true
-	})
+	// const createdPost = await NasaData.create({
+	// 	api: [imgUrlapi, weatherUrlapi], 
+	// 	imgUrl: photourl, 
+	// 	cat: 'MARS', 
+	// 	myData: JSON.stringify(latestdata), 
+	// 	defaultInfo: true
+	// })
+	const postToCreate = {
+		cat: 'mars',
+		imgUrl:photo.img_src,
+		content: `This is a photo taken by curiosity rover on earth date: ${photo.earth_date} with her ${photo.camera.full_name}. And here we also have the data of Mars weather on solDate ${solDate} which is earth_date: ${singleSetData.First_UTC}. Mars is experience ${singleSetData.Season} right now, and her average atmospheric temperature on that day is ${singleSetData.AT.av}. The windDirection is ${singleSetData.WD.most_common.compass_point} and her horizontalWindSpeed is ${singleSetData.HWS.av}. `
+
+	}
 
 
 	res.status(200).json({
 		success: true,
 		code: 200,
 		message: 'succes',
-		data: createdPost
+		data: postToCreate
 	})
 
 	}catch(err){
-		res.status(500).json({
-	        success: false,
-	        message: "internal server error",
-	        error: err
-    	})
+		next(err)
 	} //end of catch
 })
 
@@ -74,7 +85,7 @@ try{
 // you can pick date of the earth img, numbers of imgs, date of the near earth objs, number of objs.
 
 // for Earth and Near Earth OBjs. 
-router.get('/earth', async (req,res)=>{
+router.get('/earth', async (req,res, next)=>{
 	try{
 		const num = Math.floor(Math.random()*10)
 
@@ -111,27 +122,21 @@ router.get('/earth', async (req,res)=>{
 			'missedDistance': obj.close_approach_data[0].miss_distance.kilometers
 		}
 
-		const createdPost = await NasaData.create({
-			api: [imgUrlapi, nearEarthObjapi], 
-			imgUrl: imgUrl, 
-			cat: 'EARTH', 
-			defaultInfo: true,
-			myData: JSON.stringify(latestdata)
-		})
+		const postToCreate = {
+			imgUrl: imgUrl,
+			cat: 'earth',
+			content: `This image of our beautiful mother earth that you are seeing is captioned: ${imgCaption}, it is taken on ${imgDate}. Well and here is one of the asteroid that you might be making a wish to todat. it's name is ${obj.name}, it's absolute magnitude is ${obj.absolute_magnitude_h}, it is ${obj.estimated_diameter.kilometers.estimated_diameter_max} km in diameter. it is orbiring around ${obj.close_approach_data[0].orbiting_body} with the velocity of ${obj.close_approach_data[0].relative_velocity.kilometers_per_hour} you wonder if it is hazarous? the answer is ${obj.is_potentially_hazardous_asteroid} because it missed Earth by ${obj.close_approach_data[0].miss_distance.kilometers} km.`
+		}
 
 		res.status(200).json({
 			success: true,
 			message:'success',
-			data: createdPost
+			data: postToCreate
 		})
 
 		
 	}catch(err){
-		res.status(500).json({
-			success: false,
-			message: 'internal server error',
-			error: err
-		})
+		next(err)
 	} //end of catch 
 })
 

@@ -200,25 +200,94 @@ router.get('/weather', async (req,res)=>{
 
 })
 
-// this route is used for testing 
-// router.get('/', async (req,res)=>{
-// 	try{
-// 		const findAllPost = await NasaData.find()
-// 		res.status(200).json({
-// 			success: true,
-// 			message: 'success',
-// 			code: 200,
-// 			data: findAllPost
-// 		})
-		
-// 	}catch(err){
-// 		res.status(500).json({
-// 			message:'internal server error',
-// 			error: err,
-// 			success: false 
-// 		})
-// 	}
-// })
+router.get('/planet', async (req,res)=>{
+	try{
+
+		// this is getting all the planet in the kepler field
+		const planetUrl = `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,st_age,pl_pelink,pl_mnum,pl_facility,st_teff,pl_orbper,pl_disc,pl_locale,pl_discmethod,pl_name,pl_masse&format=json&where=pl_kepflag=1 and pl_masse>0`
+		const defaultPlanet = await superagent.get(planetUrl)
+
+		const parsedDefaultPlanet = JSON.parse(defaultPlanet.text)
+		console.log(parsedDefaultPlanet);
+		// Rows are listed in ascending order by default, based on the values within the row
+
+		let numArr = []
+		let planetArr = []
+		while (numArr.length < 3) {
+			let num = Math.floor(Math.random()*parsedDefaultPlanet.length)
+			if (numArr.indexOf(num) === -1) {		
+				numArr.push(num)
+				const planet = parsedDefaultPlanet[num] 
+				const planetToCreate = {
+					// apiUrl: [planetUrl,num],
+					bio: `this baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
+					name: planet.pl_name,
+				} // planetToCreate
+				planetArr.push(planetToCreate)
+			} //if
+		}	
+
+		// const createdPlanets = await Planet.create(planetArr)
+
+		res.status(200).json({
+			success: true,
+			code: 200,
+			message: 'success',
+			data: planetArr
+		})
+
+	} catch(err) {
+		res.status(500).json({
+	        success: false,
+	        message: "internal server error",
+	        error: err
+    	})
+	}
+})
+
+
+router.post('/planet', async (req,res)=>{
+	try{
+
+		// this is getting all the planet in the kepler field
+		const planetUrl = `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,st_age,pl_pelink,pl_mnum,pl_facility,st_teff,pl_orbper,pl_disc,pl_locale,pl_discmethod,pl_name,pl_masse&format=json&where=pl_name like '${req.body.name}'`
+		const defaultPlanet = await superagent.get(planetUrl)
+
+		const parsedDefaultPlanet = JSON.parse(defaultPlanet.text)
+		console.log(parsedDefaultPlanet,'<-------parsed data');
+		if (parsedDefaultPlanet.length){
+
+			const planet = parsedDefaultPlanet[0]
+			const planetToCreate = {
+				// apiUrl: [planetUrl,num],
+				bio: `this baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
+				name: planet.pl_name,
+			}//end of planet to create
+
+			res.status(200).json({
+				success: true,
+				code: 200,
+				message: 'success',
+				data: planetToCreate
+			})
+
+		} else {
+			res.status(200).json({
+				success: false,
+				code: 500,
+				message: 'no planet found',
+			})
+		}
+	} catch(err) {
+		res.status(500).json({
+	        success: false,
+	        message: "internal server error",
+	        error: err
+    	})
+	}
+
+})
+
 
 
 // APOD 

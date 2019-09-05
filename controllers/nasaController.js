@@ -298,6 +298,7 @@ router.get('/apod', async (req,res)=>{
 		const parsedRespond = await JSON.parse(apodRespond.text)
 
 		const data = {
+			imgUrl: parsedRespond.url,
 			imgCaption: parsedRespond.title,
 			explnation: parsedRespond.explanation,
 			mediaType: parsedRespond.media_type,
@@ -305,19 +306,19 @@ router.get('/apod', async (req,res)=>{
 		}
 
 
-		const createdPost = await NasaData.create({
-			api: [url], 
-			imgUrl: parsedRespond.url,
-			cat: 'APOD', 
-			defaultInfo: true,
-			myData: JSON.stringify(data)
-		})
+		// const createdPost = await NasaData.create({
+		// 	api: [url], 
+		// 	imgUrl: parsedRespond.url,
+		// 	cat: 'APOD', 
+		// 	defaultInfo: true,
+		// 	myData: JSON.stringify(data)
+		// })
 
 		res.status(200).json({
 			success: true,
 			message: 'success',
 			code: 200,
-			data: createdPost
+			data: data
 		})
 		
 	}catch(err){

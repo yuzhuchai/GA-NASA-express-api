@@ -140,54 +140,23 @@ router.get('/earth', async (req,res)=>{
 // call for the SPACE WEATHER DATABASE: 
 router.get('/spaceweather', async (req,res)=>{
 	try{
-		// 	this is the call for A coronal mass ejection (CME) is a significant release of plasma and accompanying magnetic field from the solar corona. 
-		//this is not returning any data back 
-// 		const cmeurl = `https://api.nasa.gov/DONKI/CME?api_key=${process.env.API_KEY}`
-// 		// default date is the newest date with data. 
-// 		const cmeResponse = await superagent.get(cmeurl)
-// 		const parsedCMEResponse = await JSON.parse(cmeResponse.text)
-// 		const latestdata = parsedCMEResponse[parsedCMEResponse.length-1]
-// 		const cmeAnalysis = latestdata.cmeAnalyses.filter(data => data.note)
-
-
-// 		// interplanetary shock 
-// 		const ipsUrl = `https://api.nasa.gov/DONKI/IPS?startDate=2016-01-01&endDate=2016-01-30&api_key=${process.env.API_KEY}`
-// 		const ipsResponse = await superagent.get(ipsUrl)
-// 		const parsedIPSResponse = await JSON.parse(ipsResponse.text)
-
-
-
-// those are notifications: maybe useful for some other purposes?????? 
+		
 		const notificationURL= `https://api.nasa.gov/DONKI/notifications?type=all&api_key=${process.env.API_KEY}`
 		const notificationResponse = await superagent.get(notificationURL)
 		const parsedNotification = await JSON.parse(notificationResponse.text)
-		const num = await Math.floor(Math.random()*parsedNotification.length-2)
+		const num = await Math.floor(Math.random()*parsedNotification.length)
 		const data = await parsedNotification[num]
-// 		const myData = {
-// 			CME: {
-// 				instruments: latestdata.instruments[0].displayName,
-// 				time: cmeAnalysis[0].time21_5,
-// 				latitude: cmeAnalysis[0].latitude,
-// 				longitude: cmeAnalysis[0].longitude,
-// 				speed: cmeAnalysis[0].speed,
-// 				type: cmeAnalysis[0].type,
-// 				nodes: cmeAnalysis[0].note
-// 			},
-// 			IPS: {
 
-// 			}
-// 		}
-		const createdPost = await NasaData.create({
-			api: [notificationURL], 
-			cat: 'WEATHER', 
-			defaultInfo: true,
-			myData: JSON.stringify(data)
-		})
+		const postToCreate = {
+			imgUrl: null,
+			content: `this is the NASA space weather notification on ${data.messageIssueTime}, this notificaion is about ${data.messageType}: here is the message: ${data.messageBody}`,
+			cat: 'spaceweather'
+		}
 
 		res.status(200).json({
 			success: true,
 			message:'success',
-			data: createdPost
+			data: postToCreate
 		})
 
 	}catch(err){
@@ -337,7 +306,8 @@ router.get('/apod', async (req,res,next)=>{
 
 		const postToCreate = {
 			imgUrl: parsedRespond.url,
-			content: `this photo is titled ${parsedRespond.title}, it is taken on ${parsedRespond.date} copyrighted by ${parsedRespond.copyright}. and here is a paragraph describing this photo: ${parsedRespond.explanation}`
+			content: `this photo is titled ${parsedRespond.title}, it is taken on ${parsedRespond.date} copyrighted by ${parsedRespond.copyright}. and here is a paragraph describing this photo: ${parsedRespond.explanation}`,
+			cat: 'apod'
 		}
 
 		res.status(200).json({

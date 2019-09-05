@@ -9,10 +9,7 @@ const postSchema = new mongoose.Schema({
 	    type: Date,
 	    default: Date.now,
 	},
-	data: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'NasaData'
-	},
+	cat: String,
 	favoritedBy: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'

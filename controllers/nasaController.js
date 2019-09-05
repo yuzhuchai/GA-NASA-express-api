@@ -200,6 +200,9 @@ router.get('/weather', async (req,res)=>{
 
 })
 
+
+
+
 router.get('/planet', async (req,res)=>{
 	try{
 
@@ -304,15 +307,6 @@ router.get('/apod', async (req,res)=>{
 			mediaType: parsedRespond.media_type,
 			date: parsedRespond.date
 		}
-
-
-		// const createdPost = await NasaData.create({
-		// 	api: [url], 
-		// 	imgUrl: parsedRespond.url,
-		// 	cat: 'APOD', 
-		// 	defaultInfo: true,
-		// 	myData: JSON.stringify(data)
-		// })
 
 		res.status(200).json({
 			success: true,

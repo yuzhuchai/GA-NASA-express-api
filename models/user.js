@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
 	favoritedPostsId: [{
 		type: mongoose.Schema.Types.ObjectId,  // ._id
 	    ref: 'Post'
-	}]
+	}],
+	havePlanet: false
 })
 
 const User = mongoose.model('User',userSchema)

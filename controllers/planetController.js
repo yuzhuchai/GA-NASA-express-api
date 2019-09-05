@@ -76,37 +76,45 @@ router.post('/find', async (req,res)=>{
 		const defaultPlanet = await superagent.get(planetUrl)
 
 		const parsedDefaultPlanet = JSON.parse(defaultPlanet.text)
-		console.log(parsedDefaultPlanet);
+		console.log(parsedDefaultPlanet,'<-------parsed data');
+		if (parsedDefaultPlanet.length){
 
-		const planet = parsedDefaultPlanet[0]
-		const planetToCreate = {
-			// apiUrl: [planetUrl,num],
-			bio: `this baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
-			name: planet.pl_name,
-			// user: null,
-			// data: JSON.stringify({
-			// 	hostName: planet.pl_hostname,
-			// 	name: planet.pl_name,
-			// 	discoveryMethod: planet.pl_discmethod,
-			// 	EarthMass: planet.pl_masse,
-			// 	orbitalPeriodAroundHostStarDay: planet.pl_orbper,
-			// 	discoveryfacility: planet.pl_facility,
-			// 	yearDiscovered: planet.pl_disc,
-			// 	locationDiscovered: planet.pl_locale,
-			// 	numberOFmoonsInSystem: planet.pl_mnum,
-			// 	ageOfHostStar: planet.st_age,
-			// 	linkToEncyclopaedia: planet.pl_pelink,
-			// 	effectiveTemp: planet.st_teff,
-			// })					
-		}//end of planet to create
+			const planet = parsedDefaultPlanet[0]
+			const planetToCreate = {
+				// apiUrl: [planetUrl,num],
+				bio: `this baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
+				name: planet.pl_name,
+				// user: null,
+				// data: JSON.stringify({
+				// 	hostName: planet.pl_hostname,
+				// 	name: planet.pl_name,
+				// 	discoveryMethod: planet.pl_discmethod,
+				// 	EarthMass: planet.pl_masse,
+				// 	orbitalPeriodAroundHostStarDay: planet.pl_orbper,
+				// 	discoveryfacility: planet.pl_facility,
+				// 	yearDiscovered: planet.pl_disc,
+				// 	locationDiscovered: planet.pl_locale,
+				// 	numberOFmoonsInSystem: planet.pl_mnum,
+				// 	ageOfHostStar: planet.st_age,
+				// 	linkToEncyclopaedia: planet.pl_pelink,
+				// 	effectiveTemp: planet.st_teff,
+				// })					
+			}//end of planet to create
 
-		res.status(200).json({
-			success: true,
-			code: 200,
-			message: 'success',
-			data: planetToCreate
-		})
+			res.status(200).json({
+				success: true,
+				code: 200,
+				message: 'success',
+				data: planetToCreate
+			})
 
+		} else {
+			res.status(200).json({
+				success: false,
+				code: 500,
+				message: 'no planet found',
+			})
+		}
 	} catch(err) {
 		res.status(500).json({
 	        success: false,
@@ -114,6 +122,7 @@ router.post('/find', async (req,res)=>{
 	        error: err
     	})
 	}
+
 })
 
 

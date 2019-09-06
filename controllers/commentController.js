@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const Comment = require('../models/comment')
+const Post = require('../models/post')
 
 
-router.post('/:postId', async (req,res)=>{
+router.post('/:postId', async (req,res,next)=>{
 	try{
 		// this id is the post id 
 		console.log(req.session, "<------session in create comment");
@@ -12,18 +13,25 @@ router.post('/:postId', async (req,res)=>{
 			user: req.session.userId,
 			post: req.params.postId
 		})
+
+		console.log(createdComment,'<-----createdComment');
+
+		const updatePosts = await Post.findByIdAndUpdate(req.params.postId, 
+			{ "$push": { "comments": createdComment._id } },
+    		{ "new": true, "upsert": true })
+
+		const data = {
+			updatePosts,
+			createdComment		
+		}
 		res.status(200).json({
 			message: 'success',
 			code: 200, 
-			data: createdComment
+			data: data
 		})
 
 	}catch(err){
-		res.status(500).json({
-			message: 'internal server error',
-			error: err,
-			success:false 
-		})
+		next(err)
 	}
 })
 

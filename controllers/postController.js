@@ -30,11 +30,25 @@ router.post('/', async (req,res,next)=>{
 })
 
 
+// get post of the user 
+router.get('/user/:id', async (req,res,next)=>{
+	try{
+		const findPost = await Post.find({user: req.params.id}).populate('user').populate('favoritedBy').populate({path: 'comments',populate: {path:'user'}})
+		res.status(200).json({
+			message:'success',
+			success: true,
+			data: findPost
+		})
+	}catch(err){
+		next(err)
+	}
+})
+
 // get all the post
 router.get('/', async (req,res)=>{
 	try{
 		
-		const findAllPost = await Post.find()
+		const findAllPost = await Post.find().populate('user').populate('favoritedBy').populate({path: 'comments',populate: {path:'user'}})
 		res.status(200).json({
 			message:'success',
 			success: true,
@@ -54,7 +68,7 @@ router.get('/', async (req,res)=>{
 // get a single post 
 router.get('/:id', async (req,res)=>{
 	try{
-		const findPost = await Post.findById(req.params.id)
+		const findPost = await Post.findById(req.params.id).populate('user').populate('favoritedBy').populate({path: 'comments',populate: {path:'user'}})
 		res.status(200).json({
 			message:'success',
 			success: true,

@@ -5,84 +5,29 @@ const NasaData = require('../models/nasaData')
 const Planet = require('../models/planet')
 const User = require('../models/user')
 const Comment = require('../models/comment')
+
+
 // save the post to the user. 
-// of the apis 
-router.get('/save/:id', async (req,res)=>{
-	// the id will be the id of the nasaData, not the actual post
+
+router.post('/', async (req,res,next)=>{
 	try{
-		let content
-		console.log(req.session,"<------req.session in the save post route ");
-		const findData = await NasaData.findById(req.params.id)
-		
-		// content will be req.body, because they can change the text before saving or posting into their account. 
-
-		// if (findData.cat === 'WEATHER'){
-		// 	const weatherdata = JSON.parse(findData.myData)
-
-		// 	content = `${weatherdata.messageBody}`
-
-
-		// 	console.log(content);
-		// } else if (findData.cat === 'MARS'){
-		// 	const marsdata = JSON.parse(findData.myData)
-
-		// 	content = `here is a photo of mars, taken by curosity, on ${marsdata.firstDate}, is mars solar date some thing ${marsdata.sol}. Mars's armospheric temperature is ${marsdata.atmosphericTemp}.`
-
-
-		// } else if (findData.cat === 'EARTH'){
-		// 	const earthData = JSON.parse(findData.myData)
-
-		// 	content = `${earthData.imgCaption} at ${earthData.imgDate}. On the same day, some astriods are traveling through the space. The got really close to the Earth. This little guy, named ${earthData.neoName} orbiting around ${earthData.orbBody} has an edtimated diameter of ........ not finished `
-		// }
-
 		const createdPost = await Post.create({
 			user: req.session.userId,
-			data: req.params.id,
 			content: req.body.content,
-			img: findData.imgUrl
+			cat: req.body.cat,
+			img: req.body.imgUrl 
 		})
+
 		res.status(200).json({
 			success: true,
-			message: 'success',
-			data: createdPost
+			message:'success',
+			data:createdPost 
 		})
 
-		
 	}catch(err){
-		res.status(500).json({
-			message: 'internal server error',
-			error: err,
-			success: false 
-		})
+		next(err)
 	}
 })
-
-// create a post of the planet have not tested yet......
-router.post('/planet', async (req,res)=>{
-	try{
-
-// right here in the front end, content will be the info of the planet
-		const createdPost = await Post.create({
-			user: req.session.userId,
-			data: req.params.id,
-			content: req.body.content,
-		})
-		res.status(200).json({
-			success: true,
-			message: 'success',
-			data: createdPost
-		})
-
-		
-	}catch(err){
-		res.status(500).json({
-			message :'internal server error',
-			success: false,
-			error: err
-		})
-	}
-})
-
 
 
 // get all the post

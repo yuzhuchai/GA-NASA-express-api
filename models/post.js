@@ -10,10 +10,12 @@ const postSchema = new mongoose.Schema({
 	    default: Date.now,
 	},
 	cat: String,
+
 	favoritedBy: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}],
+	
 	content: String,
 	img: {
 		type: String,

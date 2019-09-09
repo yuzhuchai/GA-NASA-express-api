@@ -8,26 +8,23 @@ router.post('/:postId', async (req,res,next)=>{
 	try{
 		// this id is the post id 
 		console.log(req.session, "<------session in create comment");
-		const createdComment = await Comment.create({
+
+		let createdComment = await Comment.create({
 			content: req.body.content,
 			user: req.session.userId,
 			post: req.params.postId
 		})
 
-		console.log(createdComment,'<-----createdComment');
+		createdComment = await createdComment.populate('user').execPopulate()
+		// console.log(createdComment,'<-----createdComment');
 
 		const updatePosts = await Post.findByIdAndUpdate(req.params.postId, 
 			{ "$push": { "comments": createdComment._id } },
     		{ "new": true, "upsert": true })
-
-		const data = {
-			updatePosts,
-			createdComment		
-		}
 		res.status(200).json({
 			message: 'success',
 			code: 200, 
-			data: data
+			data: createdComment
 		})
 
 	}catch(err){
@@ -60,7 +57,7 @@ router.get('/', async (req,res)=>{
 // get all the commet from one Post
 router.get('/post/:id', async (req,res)=>{
 	try{
-		const findCommnets = await Comment.find({post: req.params.id})
+		const findCommnets = await Comment.find({post: req.params.id}).populate('user')
 		res.status(200).json({
 			message: 'success',
 			code: 200,

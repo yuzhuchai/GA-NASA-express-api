@@ -118,7 +118,7 @@ router.put('/like/:id', async (req,res)=>{
 		res.status(200).json({
 			message: 'success',
 			code: 200,
-			data: editPost, editUser
+			data: editPost
 		})
 
 	}catch(err){
@@ -139,7 +139,7 @@ router.put('/:id', async (req,res)=>{
 		res.status(200).json({
 			message: 'success',
 			code: 200,
-			data: editPost 
+			data: editPost.populate('user').populate('favoritedBy').populate({path: 'comments',populate: {path:'user'}})
 		})
 		
 	}catch(err){

@@ -48,7 +48,7 @@ router.get('/user/:id', async (req,res,next)=>{
 router.get('/', async (req,res)=>{
 	try{
 		
-		const findAllPost = await Post.find().populate('user').populate('favoritedBy').populate({path: 'comments',populate: {path:'user'}})
+		const findAllPost = await Post.find().populate('user').populate('favoritedBy').populate({path: 'comments',populate: {path:'user'}}).populate({path:'user',populate:{path: 'favoritedPostsId'}})
 		res.status(200).json({
 			message:'success',
 			success: true,
@@ -107,13 +107,16 @@ router.delete('/:id', async (req,res)=>{
 // button to favorite/save the post: 
 router.put('/like/:id', async (req,res)=>{
 	try{
-		const editPost = await Post.findByIdAndUpdate(req.params.id,  
+		let editPost = await Post.findByIdAndUpdate(req.params.id,  
 			{ "$push": { "favoritedBy": req.session.userId } },
     		{ "new": true, "upsert": true })
 
-		const editUser = await User.findByIdAndUpdate(req.session.userId,
+		editPost = await editPost.populate('user').execPopulate()
+
+		let editUser = await User.findByIdAndUpdate(req.session.userId,
 			{'$push':{'favoritedPostsId': req.params.id}},
 			{'new': true, 'upsert': true })
+		 editUser = await editUser.populate('favoritedPostsId')
 
 		const data = {
 			editUser,

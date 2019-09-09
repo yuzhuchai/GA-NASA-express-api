@@ -14,10 +14,12 @@ router.post('/register', async (req,res)=>{
 		if (!findExistinUser) {
 
 			const hashPW = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
-			const createUser = await User.create({
+			let createUser = await User.create({
 				username: req.body.username,
 				password: hashPW
 			})
+
+			createUser = await createUser.populate({path: 'favoritedPostsId',populate: {path:'user'}}).populate({path: 'favoritedPostsId',populate: {path:'comments'}}).populate({path: 'favoritedPostsId', populate:{path:'user', populate:{path:'favoritedPostsId'}}})
 
 			req.session.userId = createUser._id
 			req.session.username = createUser.username
@@ -52,7 +54,7 @@ router.post('/login', async (req,res)=>{
 // req.session!!!!!!!!
 	try{
 		// found the user with the user name: 
-		const foundUser = await User.findOne({username: req.body.username}).populate('favoritedPostsId')
+		const foundUser = await User.findOne({username: req.body.username}).populate({path: 'favoritedPostsId',populate: {path:'user'}}).populate({path: 'favoritedPostsId',populate: {path:'comments'}}).populate({path: 'favoritedPostsId', populate:{path:'user', populate:{path:'favoritedPostsId'}}})
 		if(foundUser){
 			if(bcrypt.compareSync(req.body.password, foundUser.password)){
 				req.session.userId = foundUser._id

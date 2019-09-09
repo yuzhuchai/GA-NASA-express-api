@@ -18,9 +18,12 @@ router.post('/:postId', async (req,res,next)=>{
 		createdComment = await createdComment.populate('user').execPopulate()
 		// console.log(createdComment,'<-----createdComment');
 
-		const updatePosts = await Post.findByIdAndUpdate(req.params.postId, 
+		let updatePosts = await Post.findByIdAndUpdate(req.params.postId, 
 			{ "$push": { "comments": createdComment._id } },
     		{ "new": true, "upsert": true })
+
+		updatePosts.populate('user').execPopulate()
+		
 		res.status(200).json({
 			message: 'success',
 			code: 200, 

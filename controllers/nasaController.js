@@ -127,7 +127,7 @@ router.get('/spaceweather', async (req,res)=>{
 		const postToCreate = {
 			imgUrl: '',
 			content: `this is the NASA space weather notification on ${data.messageIssueTime}, this notificaion is about ${data.messageType}: here is the message: ${data.messageBody}`,
-			cat: 'spaceweather'
+			cat: 'spaceweather',
 		}
 
 		res.status(200).json({

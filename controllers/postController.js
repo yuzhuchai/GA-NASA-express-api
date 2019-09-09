@@ -115,10 +115,15 @@ router.put('/like/:id', async (req,res)=>{
 			{'$push':{'favoritedPostsId': req.params.id}},
 			{'new': true, 'upsert': true })
 
+		const data = {
+			editUser,
+			editPost
+		}
+
 		res.status(200).json({
 			message: 'success',
 			code: 200,
-			data: editPost
+			data: data
 		})
 
 	}catch(err){

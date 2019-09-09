@@ -52,7 +52,7 @@ router.post('/login', async (req,res)=>{
 // req.session!!!!!!!!
 	try{
 		// found the user with the user name: 
-		const foundUser = await User.findOne({username: req.body.username})
+		const foundUser = await User.findOne({username: req.body.username}).populate('favoritedPostsId')
 		if(foundUser){
 			if(bcrypt.compareSync(req.body.password, foundUser.password)){
 				req.session.userId = foundUser._id

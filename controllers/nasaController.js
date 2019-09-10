@@ -149,7 +149,7 @@ router.get('/spaceweather', async (req,res)=>{
 
 
 
-router.get('/planet', async (req,res)=>{
+router.get('/planet', async (req,res,next)=>{
 	try{
 
 		// this is getting all the planet in the kepler field
@@ -186,11 +186,7 @@ router.get('/planet', async (req,res)=>{
 		})
 
 	} catch(err) {
-		res.status(500).json({
-	        success: false,
-	        message: "internal server error",
-	        error: err
-    	})
+		next(err)
 	}
 })
 

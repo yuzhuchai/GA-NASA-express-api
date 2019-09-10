@@ -175,7 +175,7 @@ router.get('/planet', async (req,res,next)=>{
 				planetArr.push(planetToCreate)
 			} //if
 		}	
-		console.log(session,'<------session');
+		console.log(req.session,'<------session');
 		// const createdPlanets = await Planet.create(planetArr)
 
 		res.status(200).json({

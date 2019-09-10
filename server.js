@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const session = require('express-session')
 const app = express()
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 9000
 
 require('./db/db')
 
@@ -50,6 +50,6 @@ app.use('/api/v1/comment', commentController)
 
 
 
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
 	console.log('listening on port '+process.env.PORT);
 })

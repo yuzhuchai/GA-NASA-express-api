@@ -50,7 +50,7 @@ router.post('/register', async (req,res)=>{
 
 
 
-router.post('/login', async (req,res)=>{
+router.post('/login', async (req,res,next)=>{
 // req.session!!!!!!!!
 	try{
 		// found the user with the user name: 
@@ -77,10 +77,10 @@ router.post('/login', async (req,res)=>{
 			} //end of else if user not found and passowrd not correct 
 		} else {
 			res.status(200).json({
-				success: false,
-				code: 200,
-				message: 'username or password invalid',
-			})
+					success: false,
+					code: 200,
+					message:'username or password invalid',
+				})
 		}//end of else if usernot found
 
 	}catch(err){
@@ -155,8 +155,6 @@ router.put('/:id', async (req,res)=>{
 })
 
 
-router.get('/logout', (req,res)=>{
-	
-})
+
 
 module.exports = router  

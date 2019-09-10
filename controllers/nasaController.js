@@ -157,7 +157,7 @@ router.get('/planet', async (req,res)=>{
 		const defaultPlanet = await superagent.get(planetUrl)
 
 		const parsedDefaultPlanet = JSON.parse(defaultPlanet.text)
-		console.log(parsedDefaultPlanet);
+		// console.log(parsedDefaultPlanet);
 		// Rows are listed in ascending order by default, based on the values within the row
 
 		let numArr = []
@@ -175,7 +175,7 @@ router.get('/planet', async (req,res)=>{
 				planetArr.push(planetToCreate)
 			} //if
 		}	
-
+		console.log(session,'<------session');
 		// const createdPlanets = await Planet.create(planetArr)
 
 		res.status(200).json({
@@ -203,7 +203,7 @@ router.post('/planet', async (req,res)=>{
 		const defaultPlanet = await superagent.get(planetUrl)
 
 		const parsedDefaultPlanet = JSON.parse(defaultPlanet.text)
-		console.log(parsedDefaultPlanet,'<-------parsed data');
+		// console.log(parsedDefaultPlanet,'<-------parsed data');
 		if (parsedDefaultPlanet.length){
 
 			const planet = parsedDefaultPlanet[0]

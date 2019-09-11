@@ -94,6 +94,7 @@ router.post('/login', async (req,res,next)=>{
 })
 
 router.get('/logout', (req,res)=>{
+			console.log(req.session,"<------req.session in logout");
 	req.session.destroy((err) => {
 		if(err){
 			res.status(500).json({
@@ -101,7 +102,6 @@ router.get('/logout', (req,res)=>{
 				message:'internal server error',
 				error: err
 			})
-			console.log(req.session,"<------req.session in logout");
 		} else {
 			res.status(200).json({
 				success: true,

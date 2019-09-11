@@ -23,6 +23,7 @@ router.post('/', async (req,res,next)=>{
 			message:'success',
 			data:createdPost 
 		})
+		console.log(req.session,'<------req.session.userId in the post');
 
 	}catch(err){
 		next(err)
@@ -39,6 +40,7 @@ router.get('/user/:id', async (req,res,next)=>{
 			success: true,
 			data: findPost
 		})
+		console.log(req.session,'<-=====req.session in getting all the post of the user');
 	}catch(err){
 		next(err)
 	}

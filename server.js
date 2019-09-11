@@ -1,10 +1,10 @@
 require ('dotenv').config()
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-const session = require('express-session')
-const app = express()
-const PORT = process.env.PORT || 9000
+const express        = require('express');
+const app            = express();
+const bodyParser     = require('body-parser');
+const cors           = require('cors');
+const session        = require('express-session')
+const PORT    		 = process.env.PORT || 9000
 
 require('./db/db')
 
@@ -13,7 +13,7 @@ app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
 	saveUninitialized: false
-}))
+}));
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
@@ -35,14 +35,16 @@ app.post("/demo-postman",(req,res,next)=>{
 })
 
 const userController = require('./controllers/userController')
-app.use('/api/v1/user', userController)
 const nasadataController = require('./controllers/nasaController')
-app.use('/api/v1/nasadata', nasadataController)
 const planetController = require('./controllers/planetController')
-app.use('/api/v1/planet', planetController)
 const postController = require('./controllers/postController')
-app.use('/api/v1/post', postController)
 const commentController = require('./controllers/commentController')
+
+
+app.use('/api/v1/user', userController)
+app.use('/api/v1/nasadata', nasadataController)
+app.use('/api/v1/planet', planetController)
+app.use('/api/v1/post', postController)
 app.use('/api/v1/comment', commentController)
 
 

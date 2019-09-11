@@ -45,7 +45,7 @@ router.post('/adopt', async (req,res) => {
 			message: 'success',
 			data: createdPlanet
 		})
-
+		console.log(req.session ,'<-----req.session in adopting a planet');
 	}catch(err){
 		res.status(500).json({
 	        success: false,

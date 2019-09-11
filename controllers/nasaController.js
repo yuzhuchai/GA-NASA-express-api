@@ -175,7 +175,7 @@ router.get('/planet', async (req,res,next)=>{
 				planetArr.push(planetToCreate)
 			} //if
 		}	
-		console.log(req.session,'<------session');
+		// console.log(req.session,'<------session');
 		// const createdPlanets = await Planet.create(planetArr)
 
 		res.status(200).json({
@@ -208,7 +208,7 @@ router.post('/planet', async (req,res)=>{
 				bio: `this baby planet is ${planet.pl_name}, she is discovered by ${planet.pl_facility} facility by ${planet.pl_discmethod} in ${planet.pl_locale},${planet.pl_disc}. Her host star is ${planet.pl_hostname}, it is ${planet.st_age} years old. The teemperature of the star as modeled by a black body emitting the same total amount of electromagnetic radiation is ${planet.st_teff} K. Her weight is ${planet.pl_masse} in Earth Mass, which means the anount of matter contained in her meadured in the units of masses of the Earth. It takes ${planet.pl_orbper} days for her to make a complete orbit around her star. And she has ${planet.pl_mnum} of moons in her system.`,
 				name: planet.pl_name,
 			}//end of planet to create
-
+			// console.log(req.session,'<=========posting a planet');
 			res.status(200).json({
 				success: true,
 				code: 200,

@@ -12,7 +12,7 @@ require('./db/db')
 app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: false,
 }));
 
 app.use(bodyParser.urlencoded({extended: false}))

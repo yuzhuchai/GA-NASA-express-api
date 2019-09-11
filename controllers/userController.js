@@ -94,7 +94,7 @@ router.post('/login', async (req,res,next)=>{
 })
 
 router.get('/logout', (req,res)=>{
-			console.log(req.session,"<------req.session in logout");
+	console.log(req.session,"<------req.session in logout");
 	req.session.destroy((err) => {
 		if(err){
 			res.status(500).json({

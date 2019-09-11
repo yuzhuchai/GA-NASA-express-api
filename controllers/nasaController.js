@@ -154,7 +154,7 @@ router.get('/planet', async (req,res,next)=>{
 
 		// this is getting all the planet in the kepler field
 		const planetUrl = `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,st_age,pl_pelink,pl_mnum,pl_facility,st_teff,pl_orbper,pl_disc,pl_locale,pl_discmethod,pl_name,pl_masse&format=json&where=pl_kepflag=1 and pl_masse>0`
-		const defaultPlanet = await superagent.get(planetUrl)
+		const defaultPlanet = await superagent.agent().get(planetUrl)
 
 		const parsedDefaultPlanet = JSON.parse(defaultPlanet.text)
 		// console.log(parsedDefaultPlanet);
@@ -175,7 +175,7 @@ router.get('/planet', async (req,res,next)=>{
 				planetArr.push(planetToCreate)
 			} //if
 		}	
-		// console.log(req.session,'<------session');
+		console.log(req.session,'<------session');
 		// const createdPlanets = await Planet.create(planetArr)
 
 		res.status(200).json({

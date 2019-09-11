@@ -10,11 +10,11 @@ const superagent = require('superagent')
 // this is the default and sample for mars cat post data: 
 router.get('/mars', async (req,res,next)=>{
 try{
-	const num = Math.floor(Math.random()*10)
+	const num = Math.floor(Math.random()*5)
 	const randomDate = (start, end) => {
     		return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 		}
-	const date = randomDate(new Date(2016, 1, 1), new Date())
+	const date = randomDate(new Date(2016, 1, 1), new Date(2019,8,31))
 	const qString = date.toISOString().split('T')[0]
 	console.log(qString,'<----randomDate');
 
@@ -32,11 +32,10 @@ try{
 	 
 	const solDate = parsedWeatherResponse.sol_keys[randomnum] //this get you the latest date
 	const singleSetData = parsedWeatherResponse[solDate] //this get you the data of the latest date 
-
 	const postToCreate = {
 		cat: 'mars',
 		imgUrl:photo.img_src,
-		content: `This is a photo taken by curiosity rover on earth date: ${photo.earth_date} with her ${photo.camera.full_name}. And here we also have the data of Mars weather on solDate ${solDate} which is earth_date: ${singleSetData.First_UTC}. Mars is experience ${singleSetData.Season} right now, and her average atmospheric temperature on that day is ${singleSetData.AT.av}. The windDirection is ${singleSetData.WD.most_common.compass_point} and her horizontalWindSpeed is ${singleSetData.HWS.av}. `
+		content: `This is a photo taken by curiosity rover on earth date: ${photo.earth_date} with her ${photo.camera.full_name}. And here we also have the data of Mars weather on solDate ${solDate} which is earth_date: ${singleSetData.First_UTC}. Mars is experience ${singleSetData.Season} right now, and her average atmospheric temperature on that day is ${singleSetData.AT.av}.`
 
 	}
 

@@ -8,7 +8,6 @@ const Comment = require('../models/comment')
 
 
 // save the post to the user. 
-
 router.post('/', async (req,res,next)=>{
 	try{
 		const createdPost = await Post.create({
@@ -23,7 +22,6 @@ router.post('/', async (req,res,next)=>{
 			message:'success',
 			data:createdPost 
 		})
-		console.log(req.session,'<------req.session.userId in the post');
 
 	}catch(err){
 		next(err)
@@ -40,11 +38,12 @@ router.get('/user/:id', async (req,res,next)=>{
 			success: true,
 			data: findPost
 		})
-		console.log(req.session,'<-=====req.session in getting all the post of the user');
 	}catch(err){
 		next(err)
 	}
 })
+
+
 
 // get all the post
 router.get('/', async (req,res)=>{
@@ -67,7 +66,7 @@ router.get('/', async (req,res)=>{
 })
 
 
-// get a single post 
+// get a single post with post id
 router.get('/:id', async (req,res)=>{
 	try{
 		const findPost = await Post.findById(req.params.id).populate('user').populate('favoritedBy').populate({path: 'comments',populate: {path:'user'}})
@@ -85,7 +84,7 @@ router.get('/:id', async (req,res)=>{
 	}
 }) 
 
-// delete post >>>>>> should also delete comment? 
+// delete post should also delete comment
 router.delete('/:id', async (req,res)=>{
 	try{
 		const deletePost = await Post.findByIdAndRemove(req.params.id)

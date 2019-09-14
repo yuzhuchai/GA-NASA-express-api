@@ -5,7 +5,7 @@ const superagent = require('superagent')
 
 
 
-// create planet with req.body --- add this planet as this user's pet
+// make the api call to NASA aip with the req.body of the planet name as query string
 router.post('/adopt', async (req,res) => {
 	try{
 		planetUrl = `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,st_age,pl_pelink,pl_mnum,pl_facility,st_teff,pl_orbper,pl_disc,pl_locale,pl_discmethod,pl_name,pl_masse&format=json&where=pl_name like '${req.body.name}'`
@@ -34,10 +34,6 @@ router.post('/adopt', async (req,res) => {
 			user: req.session.userId,
 			data: JSON.stringify(myData)
 		})
-
-		// const updateUser = await User.findByIdAndUpdate(req.session.userId, {havePlanet: true}, {new: true})
-
-		// const data = [createdPlanet, updateUser]
 
 		res.status(200).json({
 			success: true,
@@ -80,7 +76,7 @@ router.get('/:id', async (req, res) => {
 
 
 
-// getting delete planet
+// delete planet
 router.delete('/:id', async (req, res) => {
 	try {
 		const deletePlanet = await Planet.findByIdAndRemove(req.params.id)
@@ -101,6 +97,8 @@ router.delete('/:id', async (req, res) => {
 })
 
 
+
+// update planet happiness route
 router.put('/status/:id', async (req,res, next)=>{
 	try{
 		console.log(`hitting this route`);
@@ -115,11 +113,6 @@ router.put('/status/:id', async (req,res, next)=>{
 		
 	}catch(err){
 		next(err)
-		// res.status(500).json({
-		// 	success: false,
-		// 	message: 'internal server error',
-		// 	error: err
-		// })
 	}
 })
 
@@ -127,9 +120,6 @@ router.put('/status/:id', async (req,res, next)=>{
 
 // edit planet
 router.put('/:id', async (req,res)=>{
-	// get the id of current user from the front end and update the user. or use session?????
-
-	// req.session after the user controller
 	try {
     const updateUserToPlanet = await Planet.findByIdAndUpdate(req.params.id, {name: req.body.name, bio: req.body.bio}, {new: true});
     res.status(200).json({

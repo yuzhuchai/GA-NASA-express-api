@@ -36,7 +36,6 @@ try{
 		cat: 'mars',
 		imgUrl:photo.img_src,
 		content: `This is a photo taken by curiosity rover on earth date: ${photo.earth_date} with her ${photo.camera.full_name}. And here we also have the data of Mars weather on solDate ${solDate} which is earth_date: ${singleSetData.First_UTC}. Mars is experience ${singleSetData.Season} right now, and her average atmospheric temperature on that day is ${singleSetData.AT.av}.`
-
 	}
 
 
@@ -147,7 +146,7 @@ router.get('/spaceweather', async (req,res)=>{
 
 
 
-
+// api call to the nasa plantery to get all the planet with kepler flag up. display only three of them.
 router.get('/planet', async (req,res,next)=>{
 	try{
 
@@ -190,6 +189,8 @@ router.get('/planet', async (req,res,next)=>{
 })
 
 
+
+// getting a planet that the user searched. 
 router.post('/planet', async (req,res)=>{
 	try{
 
@@ -234,7 +235,7 @@ router.post('/planet', async (req,res)=>{
 
 
 
-// APOD 
+// data from NASA apod aip APOD this route is for the picture of the day,(background of the app)
 router.get('/load/apod', async (req,res,next)=>{
 	try{
 		const url = `https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`
@@ -263,6 +264,8 @@ router.get('/load/apod', async (req,res,next)=>{
 })
 
 
+
+// get a random post from nasa APOD api with a random date
 router.get('/apod', async (req,res,next)=>{
 	try{
 		const randomDate = (start, end) => {

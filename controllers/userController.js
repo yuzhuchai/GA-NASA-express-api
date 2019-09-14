@@ -5,8 +5,8 @@ const bcrypt  = require('bcrypt');
 
 
 
+// user register route.
 router.post('/register', async (req,res)=>{
-	// req.session!!!!!!!!
 	try{
 		// check if the user name is taken 
 		// if not taken, hash the password. 
@@ -24,7 +24,6 @@ router.post('/register', async (req,res)=>{
 			req.session.userId = createUser._id
 			req.session.username = createUser.username
 			req.session.loggedIn = true;
-			console.log(req.session,"<--------req.session in the register route");
 			res.status(200).json({
 				success: true,
 				message: `${createUser.username} registed success!`,
@@ -49,9 +48,8 @@ router.post('/register', async (req,res)=>{
 
 
 
-
+// user login route 
 router.post('/login', async (req,res,next)=>{
-// req.session!!!!!!!!
 	try{
 		// found the user with the user name: 
 		const foundUser = await User.findOne({username: req.body.username}).populate({path: 'favoritedPostsId',populate: {path:'user'}}).populate({path: 'favoritedPostsId',populate: {path:'comments'}}).populate({path: 'favoritedPostsId', populate:{path:'user', populate:{path:'favoritedPostsId'}}})
@@ -60,7 +58,6 @@ router.post('/login', async (req,res,next)=>{
 				req.session.userId = foundUser._id
 				req.session.username = foundUser.username
 				req.session.loggedIn = true
-				console.log(req.session,"<--------req.session in the login route");
 
 				res.status(200).json({
 					success: true,
@@ -93,6 +90,9 @@ router.post('/login', async (req,res,next)=>{
 
 })
 
+
+
+// Logout route 
 router.get('/logout', (req,res)=>{
 	console.log(req.session,"<------req.session in logout");
 	req.session.destroy((err) => {
@@ -132,27 +132,6 @@ router.delete('/:id', async (req,res)=>{
 	
 })
 
-
-// update profile 
-router.put('/:id', async (req,res)=>{
-
-	try{
-		const editUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
-
-		res.status(200).json({
-			success: true,
-			code: 200,
-			data: editUser
-		})
-	}catch(err){
-		res.status(500).json({
-			success: false,
-			message: 'internal server error',
-			error: err
-		})
-	}
-	
-})
 
 
 

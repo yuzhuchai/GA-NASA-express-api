@@ -4,6 +4,8 @@ const Comment = require('../models/comment')
 const Post = require('../models/post')
 
 
+
+// creating the comment and attaching the post id to the comment. 
 router.post('/:postId', async (req,res,next)=>{
 	try{
 		// this id is the post id 
@@ -35,7 +37,6 @@ router.post('/:postId', async (req,res,next)=>{
 	}
 })
 
-// 5d6ed6806e94435a37dba203 this is the test post id 
 
 
 router.get('/', async (req,res)=>{
